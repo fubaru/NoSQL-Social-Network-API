@@ -2,6 +2,35 @@ const { Schema, model, Types } = require('mongoose');
 // create date format utils then import
 const dateFormat = require('../utils/dateFormat');
 
+const reactionSchema = new Schema(
+    {
+        reactionId: {
+            type: Schema.Types.ObjectId,
+            default: () => new Types.ObjectId(),
+        },
+        reactionBody: {
+            type: String,
+            required: 'Please Enter Your Reaction',
+            maxlength: 280
+        },
+        username: {
+            type: String,
+            required: 'name input required',
+            trim: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: createdAtVal => dateFormat(createdAtVal)
+        }
+    },
+    {
+        toJSON: {
+            getters: true
+        }
+    }
+);
+
 const thoughtSchema = new Schema(
     {
         username: {
@@ -31,34 +60,7 @@ const thoughtSchema = new Schema(
     }
 );
 
-const reactionSchema = new Schema(
-    {
-        reactionId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId(),
-        },
-        reactionBody: {
-            type: String,
-            required: 'Please Enter Your Reaction',
-            maxlength: 280
-        },
-        username: {
-            type: String,
-            required: 'name input required',
-            trim: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-            get: createdAtVal => dateFormat(createdAtVal)
-        }
-    },
-    {
-        toJSON: {
-            getters: true
-        }
-    }
-);
+
 
 thoughtSchema.virtual("reactionCount").get(function (){
     return this.reactions.length;
